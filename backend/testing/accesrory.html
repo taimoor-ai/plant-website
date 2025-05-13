@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Add New Accessory</h2>
+  <form
+    id="accessoryForm"
+    enctype="multipart/form-data"
+    method="POST"
+    action="http://localhost:3000/accessory/add"
+  >
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name" required /><br /><br />
+
+    <label for="description">Description:</label>
+    <textarea name="description" id="description" required></textarea><br /><br />
+
+    <label for="stock">Stock:</label>
+    <input type="number" name="stock" id="stock" min="0" required /><br /><br />
+
+    <label for="size">Size:</label>
+    <select name="size" id="size" required>
+      <option value="">Select Size</option>
+      <option value="small">Small</option>
+      <option value="medium">Medium</option>
+      <option value="large">Large</option>
+    </select><br /><br />
+
+    <label for="price">Price:</label>
+    <input type="number" name="price" id="price" step="0.01" min="0" required /><br /><br />
+
+    <label for="category">Category:</label>
+    <input type="text" name="category" id="category" required /><br /><br />
+
+    <label for="images">Images:</label>
+    <input type="file" name="images" id="images" multiple required /><br /><br />
+
+    <button type="submit">Submit Accessory</button>
+  </form>
+</body>
+</html>

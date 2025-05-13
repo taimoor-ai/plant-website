@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Upload Plant with Images</h2>
+    <form id="plantForm" enctype="multipart/form-data">
+      <label>Name: <input type="text" value="aloavrar" name="name" required></label><br><br>
+      <label>Description: <input type="text" value="description" name="description" required></label><br><br>
+      <label>Stock: <input type="number"  value =1 name="stock" required></label><br><br>
+      <label>Size:
+        <select name="size" required>
+          <option value="small">Select Size</option>
+          <option value="small">Small</option>
+          <option value="medium">Medium</option>
+          <option value="large">Large</option>
+        </select>
+      </label><br><br>
+      <label>Price: <input type="number" value=1001 name="price" step="0.01" required></label><br><br>
+      <label>Category: <input type="text" value="indoor" name="category" required></label><br><br>
+      <label>Light:
+        <select name="light" required>
+          <option value="low">Select Light</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </label><br><br>
+      <label>Water:
+        <select name="water" required>
+          <option value="low">Select Water</option>
+          <option select value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </label><br><br>
+      <label>Images: <input type="file" name="images" multiple required></label><br><br>
+  
+      <button type="submit">Upload</button>
+    </form>
+  
+    <pre id="response"></pre>
+  
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('plantForm');
+        const responseBox = document.getElementById('response');
+  
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault(); // STOP form from reloading the page
+  
+          const formData = new FormData(form);
+              
+          try {
+            const res = await fetch('http://localhost:3000/product/plants/add', {
+              method: 'POST',
+              body: formData
+            });
+  
+            const data = await res.json();
+            responseBox.textContent = JSON.stringify(data, null, 2);
+          } catch (error) {
+            responseBox.textContent = 'Error: ' + error.message;
+          }
+        });
+      });
+    </script>
+</body>
+</html>
