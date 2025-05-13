@@ -1,34 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
+import Sidebar from './components/Sidebar'
+import MainContent from './components/MainContent'
+import RightPanel from './components/RightPanel'
+import Analytics from './components/Analytics'
+import Reports from './components/Reports'
+import Store from './components/Store'
+import Profile from './components/Profile'
+import Settings from './components/Settings'
+import AddPlant from './components/AddPlant'
+import PlantList from './components/PlantList'
+import AddAccessory from './components/AddAccessory'
+import Accessories from './components/Accessories'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="flex h-screen bg-[#F6FAF7] overflow-hidden">
+        <Sidebar />
+        <main className="flex-1 flex justify-center plant-scrollbar-main items-start p-8 h-full overflow-y-auto">
+          <Routes>
+            <Route path="/" element={<MainContent />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/store" element={<Store />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/add-plant" element={<AddPlant />} />
+            <Route path="/plants" element={<PlantList />} />
+            <Route path="/add-accessory" element={<AddAccessory />} />
+            <Route path="/accessories" element={<Accessories />} />
+          </Routes>
+        </main>
+        <RightPanel />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </Router>
   )
 }
 
