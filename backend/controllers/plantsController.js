@@ -16,6 +16,7 @@ const addPlant = async (req, res) => {
     let imageUrls = [];
 
     if (!req.body.imageUrl) {
+      console.log("i am call")
       if (!req.files || req.files.length === 0) {
         return res.status(400).json({
           success: false,
@@ -28,8 +29,9 @@ const addPlant = async (req, res) => {
         imageUrls.push(result.secure_url);
         fs.unlinkSync(file.path); // Delete temp file
       }
-    }
+    } else {  
     imageUrls = req.body.imageUrl;
+    }
 
     const plantData = {
       name: req.body.name,
@@ -116,11 +118,33 @@ const deletePlant = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
+const deleteBulk = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    await Plant.deleteMany({ _id: { $in: ids } });
+    res.status(200).json({ message: "Plants deleted successfully",success:true });
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ error: err.message,success:false });
+  }
+};
+const unAvailable = async (req, res) => {
+  try {
+    const { ids,isavailable } = req.body;
+    console.log(isavailable)
+    await Plant.updateMany({ _id: { $in: ids } }, { $set: { isavailable: isavailable } });
+    res.status(200).json({ message: "Plants unavailabled successfully" ,success:true});
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ error: err.message ,success:false});
+  }
+};    
 module.exports = {
   addPlant,
   getAllPlants,
   getPlantById,
   updatePlant,
   deletePlant,
+  deleteBulk,
+  unAvailable,
 };

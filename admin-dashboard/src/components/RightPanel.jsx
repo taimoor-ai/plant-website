@@ -3,37 +3,19 @@ import { useNavigate } from "react-router-dom";
 import AnimatedList from "./AnimatedList";
 import PlantInfoModal from "./PlantInfoModal";
 import axios from "axios";
-
-//  
+import { useContext } from "react";
+import { PlantContext } from "../../context/plantsContext";
 
 const RightPanel = () => {
+  console.log("i am rerenders");
   const navigate = useNavigate();
-  const [plantList,setPlants]=useState([]);
+  const {
+    plants: plantList,
+    isLoading2,
+    deletePlant,
+    fetchPlants,
+  } = useContext(PlantContext);
   const [selectedPlant, setSelectedPlant] = useState(null);
-  useEffect(() => {
-    fetchPlants();
-  }, []);
-  const fetchPlants = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/product/plants');
-      const extractedData = response.data.map(({ _id, name, category, imageUrl, size, water }) => ({
-        _id,
-        name,
-        category,
-        imageUrl,
-        size,
-        water
-      }));
-    
-      
-      setPlants(extractedData);
-      
-     
-    } catch (error) {
-      console.error('Error fetching plants:', error);
-      
-    }
-  };
   const handlePlantSelect = (plant) => {
     setSelectedPlant(plant);
   };
@@ -64,22 +46,30 @@ const RightPanel = () => {
           </button>
         </div>
         <span className="max-h-64 overflow-y-auto pr-2 scollbar-hide bg-[#223232]/60 rounded-xl shadow-inner">
-          <AnimatedList
-            items={plantList}
-            onItemSelect={handlePlantSelect}
-            showGradients={true}
-            enableArrowNavigation={true}
-            displayScrollbar={true}
-          />
+          {isLoading2 ? (
+            <p>Loading plants...</p>
+          ) : plantList.length === 0 ? (
+            <p>No plants found</p>
+          ) : (
+            <AnimatedList
+              items={plantList}
+              onItemSelect={handlePlantSelect}
+              showGradients={true}
+              enableArrowNavigation={true}
+              displayScrollbar={true}
+            />
+          )}
         </span>
       </div>
 
       {/* Plant Info Modal */}
 
-      {selectedPlant&&<PlantInfoModal
-        plant={selectedPlant}
-        onClose={() => setSelectedPlant(null)}
-      />}
+      {selectedPlant && (
+        <PlantInfoModal
+          plant={selectedPlant}
+          onClose={() => setSelectedPlant(null)}
+        />
+      )}
     </aside>
   );
 };

@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { FiUpload, FiX, FiPlus } from 'react-icons/fi';
 import PlantLoader from './PlantLoader';
 import Notification from './Notification';
-
+import { useContext } from 'react';
+import { PlantContext} from '../../context/plantsContext';
 const AddPlant = () => {
+  const {addPlantLocally} = useContext(PlantContext)
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState({ show: false, message: '', type: '' });
@@ -93,6 +95,8 @@ const AddPlant = () => {
             message: 'Plant added successfully!',
             type: 'success'
           });
+          console.log(response.data.plant)
+          addPlantLocally(response.data.plant)
           setTimeout(() => {
             navigate('/plants');
           }, 1500);
@@ -118,6 +122,7 @@ const AddPlant = () => {
       const response = await axios.post('http://localhost:3000/product/plants/add', submitData);
       
       if (response.data.success) {
+
         setNotification({
           show: true,
           message: 'Plant added successfully!',

@@ -5,38 +5,23 @@ import PlantLoader from './PlantLoader';
 import Notification from './Notification';
 import { FiUpload, FiX, FiPlus } from 'react-icons/fi';
 import { useLocation } from 'react-router-dom';
-const AddAccessory = () => {
+const UpdateAccessory = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const accessory = location.state?.accessory;
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState({ show: false, message: '', type: '' });
   const [formData, setFormData] = useState({
-    name: '',
-    commonName: '',
-    description: '',
-    stock: '',
-    size: 'small',
-    price: '',
-    imageUrl: [''],
-    category: '',
-    isavailable: true,
+    name: accessory.name || '',
+    commonName: accessory.commonName || [],
+    category: accessory.category || '',
+    size: accessory.size || '',
+    price: accessory.price || '',
+    stock: accessory.stock || '',
+    isavailable: accessory.isavailable ?? true,
+    imageUrl: accessory.imageUrl || [],
+    _id: accessory._id
   });
-  useEffect(() => {
-    if (location.state?.accessory) {
-      const { accessory } = location.state;
-      setFormData({
-        name: accessory.name || '',
-        commonName: accessory.commonName || [],
-        category: accessory.category || '',
-        size: accessory.size || '',
-        price: accessory.price || '',
-        stock: accessory.stock || '',
-        isavailable: accessory.isavailable ?? true,
-        imageUrl: accessory.imageUrl || [],
-        _id: accessory._id
-      });
-    }
-  }, [location.state]);
   const [errors, setErrors] = useState({});
   const [imageInputType, setImageInputType] = useState('url');
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -141,7 +126,7 @@ const AddAccessory = () => {
       )}
       <div className="bg-white rounded-3xl shadow-lg p-8 relative">
         {isLoading && <PlantLoader />}
-        <h2 className="text-2xl font-bold text-green-900 mb-6">Add New Accessory</h2>
+        <h2 className="text-2xl font-bold text-green-900 mb-6">Update Accessory</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -268,4 +253,4 @@ const AddAccessory = () => {
   );
 };
 
-export default AddAccessory;
+export default UpdateAccessory;

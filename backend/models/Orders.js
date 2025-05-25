@@ -3,15 +3,13 @@ const mongoose = require("mongoose");
 const ordersSchema = mongoose.Schema(
   {
     user: {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        refPath: "user.userType"
-      },
-      userType: {
+      name: {
         type: String,
-        required: true,
-        enum: ["User", "GuestUser"]
+        required: true
+      },
+      address: {
+        type: String,
+        required: true
       }
     },
     products: [

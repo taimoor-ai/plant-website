@@ -6,6 +6,8 @@ const {
   getAccessoryById,
   updateAccessory,
   deleteAccessory,
+  deleteAccessoriesMultiple,
+  updateAvailability,
 } = require("../controllers/accessoriesController");
 const upload = require("../Config/multer");
 const router = express.Router();
@@ -25,5 +27,6 @@ router.get("/get", getAllAccessories);
 router.get("/get/:id", getAccessoryById);
 router.put("/:id", accessoryValidation, updateAccessory);
 router.delete("/:id", deleteAccessory);
-
+router.post("/deleteMultiple", deleteAccessoriesMultiple);
+router.post("/updateAvailability", updateAvailability);
 module.exports = router;

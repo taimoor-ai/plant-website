@@ -65,5 +65,26 @@
   animation: slideIn 0.3s ease-out forwards;
 }
 
+.plant-scrollbar2::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
 
+.plant-scrollbar2::-webkit-scrollbar-thumb {
+  background: #a7e9af00;
+  border-radius: 8px;
+  border: 2px solid #1b2b2b00;
+}
+.plant-scrollbar2::-webkit-scrollbar-thumb:hover {
+  background: #66bb6a00;
+}
 
+.perspective-1000 {
+  perspective: 1000px;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}

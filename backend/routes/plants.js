@@ -3,11 +3,13 @@ const { body, param, validationResult } = require("express-validator");
 const upload = require("../Config/multer")
 const router = express.Router();
 const {
+  unAvailable,
   addPlant,
   getAllPlants,
   getPlantById,
   updatePlant,
   deletePlant,
+  deleteBulk,
 } = require("../controllers/plantsController");
 
 // Create a new plant
@@ -62,5 +64,6 @@ router.delete(
   [param("id").isMongoId().withMessage("Invalid plant ID format.")],
   deletePlant
 );
-
+router.post("/plants/deleteBulk", deleteBulk);
+router.post("/plants/setAvailability", unAvailable);
 module.exports = router;

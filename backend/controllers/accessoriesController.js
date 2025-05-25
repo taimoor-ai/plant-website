@@ -58,7 +58,7 @@ const getAccessoryById = async (req, res) => {
   try {
     const accessory = await Accessory.findById(req.params.id);
     if (!accessory) return res.status(404).json({ error: "Accessory not found" });
-    res.status(200).json({ data: accessory });
+    res.status(200).json( accessory);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -88,6 +88,50 @@ const deleteAccessory = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+const deleteAccessoriesMultiple = async (req, res) => {
+  try {
+    const { ids } = req.body; // Expecting: { ids: ["id1", "id2", ...] }
+ console.log("i am call")
+  console.log(ids)
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: "No accessory IDs provided" });
+    }
+
+    const result = await Accessory.deleteMany({ _id: { $in: ids } });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "No accessories found to delete" });
+    }
+
+    res.status(200).json({ message: `${result.deletedCount} accessory(s) deleted` });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const updateAvailability = async (req, res) => {
+  try {
+    console.log("i am call")
+    const { ids, availability } = req.body;
+
+    if (!Array.isArray(ids) || typeof availability !== "boolean") {
+      return res.status(400).json({ error: "Invalid request body" });
+    }
+
+    const result = await Accessory.updateMany(
+      { _id: { $in: ids } },
+      { $set: { isavailable: availability } }
+    );
+
+    res.status(200).json({
+      message: `Accessories marked as ${availability ? "available" : "unavailable"}`,
+      modifiedCount: result.modifiedCount,
+    });
+  } catch (err) {
+    console.error("Error updating availability:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 module.exports = {
   addAccessory,
@@ -95,4 +139,6 @@ module.exports = {
   getAccessoryById,
   updateAccessory,
   deleteAccessory,
+  deleteAccessoriesMultiple,
+  updateAvailability,
 };
