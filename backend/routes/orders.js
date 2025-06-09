@@ -41,7 +41,7 @@ router.get("/user/:userType/:userId", [
 // Update order status
 router.put("/update-status/:orderId", [
   param("orderId").isMongoId(),
-  body("status").isIn(["pending", "shipped", "delivered", "cancelled"]).withMessage("Invalid status")
+  body("status").isIn(["pending","confirmed", "completed","dispatch","shipped", "delivered", "cancelled"]).withMessage("Invalid status")
 ], updateOrderStatus);
 
 // Delete an order

@@ -1,4 +1,5 @@
 const Plant = require("../models/Plants");
+const Accessory=require("../models/Accessories")
 const { validationResult } = require("express-validator");
 const cloudinary = require("../Config/cloudinary");
 const fs = require("fs");
@@ -65,11 +66,23 @@ const addPlant = async (req, res) => {
 const getAllPlants = async (req, res) => {
   try {
     const plants = await Plant.find().lean();
+
     res.status(200).json(plants);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+const getFeaturedProduct=async(req,res)=>{
+  try {
+    const plants = await Plant.find().lean();
+    const accessories=await Accessory.find().lean();
+    const combined = [...plants, ...accessories];
+    res.status(200).json({products:combined,sucsess:true});
+  }catch(err){
+    console.log(err);
+    res.status(201).send("error get data ")
+  }
+}
 
 // Get a specific plant by ID
 const getPlantById = async (req, res) => {
@@ -147,4 +160,5 @@ module.exports = {
   deletePlant,
   deleteBulk,
   unAvailable,
+  getFeaturedProduct
 };

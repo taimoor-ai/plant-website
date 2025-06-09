@@ -18,6 +18,15 @@ const plantSchema = mongoose.Schema({
         required: true,
         enum: ["small", "medium", "large"]
     },
+    originalPrice: {
+        type: Number,
+        required: true,
+    },
+    countdown:{
+        type: Date,
+        required: false,
+        default: null
+    },
     price: {
         type: Number,
         required: true,

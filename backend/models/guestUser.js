@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const guestUserSchema = mongoose.Schema(
   {
-    user_id: {
+    guest_id: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     }
   },
   { timestamps: true }

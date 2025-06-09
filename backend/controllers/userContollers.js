@@ -34,8 +34,8 @@ const generateToken=(user)=>{
     return  jwt.sign(user,process.env.JWT_SECRET,{expiresIn:'1h'})
 }
 exports.login=async (req,res)=>{
- 
-    const {email,password}=req.body;
+  const {email,password}=req.body;
+  console.log(email,password)
     try{
             const user=await User.findOne({email});
             if(!user){
@@ -75,4 +75,6 @@ exports.logout=(req,res)=>{
      res.status(201).json({msg:"error logout ",success:false})
   }
 }
+
+
 

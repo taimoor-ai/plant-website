@@ -1,3 +1,4 @@
+const { registerGuestUser } = require("../controllers/guestUser");
 const { register,login,logout } = require("../controllers/userContollers");
 const router = require("express").Router();
 const { body, validationResult } = require("express-validator");
@@ -26,7 +27,8 @@ const loginValidation=[
         next();
     }
 ]
+router.post("/registerGuest",registerGuestUser)
 router.post("/register",userValidation, register);
-router.get("/login",loginValidation,login)
+router.post("/login",loginValidation,login)
 router.post("/logout",logout)
 module.exports = router;

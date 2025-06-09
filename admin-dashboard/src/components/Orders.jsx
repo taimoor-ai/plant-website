@@ -3,6 +3,7 @@ import axios from "axios";
 import { FiSettings, FiCalendar } from "react-icons/fi";
 import { useNavigate, Link } from "react-router-dom";
 import { PlantContext } from "../../context/plantsContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 const statusStyles = {
   confirmed: "bg-yellow-100 text-yellow-600",
@@ -15,6 +16,7 @@ const statusStyles = {
 };
 
 const tabOrder = ["cancelled", "confirmed", "dispatch", "pending", "completed"];
+const statusOptions = ["confirmed", "pending", "dispatch", "completed", "delivered", "cancelled"];
 
 const Orders = () => {
   const navigate = useNavigate();
@@ -22,9 +24,9 @@ const Orders = () => {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const { userProfile } = useContext(PlantContext);
 
-  // Profile dropdown state
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef();
+  const [openMenuId, setOpenMenuId] = useState(null);
 
   useEffect(() => {
     fetchOrders();
@@ -34,6 +36,9 @@ const Orders = () => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setProfileOpen(false);
+      }
+      if (!event.target.closest(".settings-menu")) {
+        setOpenMenuId(null);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -46,6 +51,20 @@ const Orders = () => {
       setOrders(res.data || []);
     } catch (err) {
       console.error("Fetch error:", err);
+    }
+  };
+
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      const res=await axios.put(`http://localhost:3000/order/update-status/${orderId}`, { status: newStatus });
+      console.log(res)
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === orderId ? { ...order, status: newStatus } : order
+        )
+      );
+    } catch (err) {
+      console.error("Failed to update status:", err);
     }
   };
 
@@ -67,6 +86,12 @@ const Orders = () => {
           (order) =>
             order.status?.toLowerCase() === selectedStatus.toLowerCase()
         );
+  const isOrderNew = (createdAt) => {
+  const now = new Date();
+  const createdDate = new Date(createdAt);
+  const diffInMs = now - createdDate;
+  return diffInMs < 24 * 60 * 60 * 1000;
+};
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -105,13 +130,13 @@ const Orders = () => {
                 <hr className="my-3" />
                 <Link
                   to="/profile"
-                  className="block text-sm text-gray-700 hover:bg-gray-100 p-2 rounded"
+                  className="block text-sm text-gray-700 hover:bg-green-100 p-2 rounded"
                 >
                   View Profile
                 </Link>
                 <Link
                   to="/settings"
-                  className="block text-sm text-gray-700 hover:bg-gray-100 p-2 rounded"
+                  className="block text-sm text-gray-700 hover:bg-green-100 p-2 rounded"
                 >
                   Settings
                 </Link>
@@ -166,10 +191,11 @@ const Orders = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-xl shadow-lg bg-white">
+      <div className=" rounded-xl shadow-lg bg-white">
         <table className="w-full table-auto text-sm">
-          <thead className="bg-gray-100 text-gray-600 uppercase">
+          <thead className="bg-green-100 text-gray-600 uppercase">
             <tr>
+              <th className="px-6 py-4 text-left">tag</th>
               <th className="px-6 py-4 text-left">Id</th>
               <th className="px-6 py-4 text-left">Name</th>
               <th className="px-6 py-4 text-left">Address</th>
@@ -185,9 +211,16 @@ const Orders = () => {
               return (
                 <tr
                   key={order._id}
-                  className="border-b hover:bg-green-300 cursor-pointer"
+                  className="border-b  hover:bg-green-200 cursor-pointer relative"
                   onClick={() => navigate(`/orders/${order._id}`)}
                 >
+                  <td className="px-6 py-4 font-semibold text-gray-700">
+                    {isOrderNew(order.createdAt) && (
+                      <span className="text-xs bg-red-200 text-red-800 px-2 py-1 rounded-full">
+                        New
+                      </span>
+                    )}
+                  </td>
                   <td className="px-6 py-4 font-semibold text-gray-700">
                     #{order._id.slice(-6)}
                   </td>
@@ -211,15 +244,42 @@ const Orders = () => {
                       {status.charAt(0).toUpperCase() + status.slice(1)}
                     </span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 relative">
                     <button
                       onClick={(e) => {
-                        e.stopPropagation(); // prevent row click
+                        e.stopPropagation();
+                        setOpenMenuId(openMenuId === order._id ? null : order._id);
                       }}
-                      className="text-gray-400 hover:text-black transition"
+                      className="text-gray-400 cursor-pointer hover:text-black transition"
                     >
                       <FiSettings />
                     </button>
+
+                    <AnimatePresence>
+                      {openMenuId === order._id && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute right-0 mt-2 w-40 bg-white border shadow-lg rounded-lg z-50 settings-menu"
+                        >
+                          {statusOptions.map((opt) => (
+                            <div
+                              key={opt}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleStatusChange(order._id, opt);
+                                setOpenMenuId(null);
+                              }}
+                              className="px-4 py-2 text-sm hover:bg-green-100 cursor-pointer capitalize"
+                            >
+                              {opt}
+                            </div>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </td>
                 </tr>
               );

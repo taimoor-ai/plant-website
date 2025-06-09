@@ -10,6 +10,7 @@ const {
   updatePlant,
   deletePlant,
   deleteBulk,
+  getFeaturedProduct
 } = require("../controllers/plantsController");
 
 // Create a new plant
@@ -32,7 +33,7 @@ router.post(
 
 // Get all plants
 router.get("/plants", getAllPlants);
-
+router.get("/featuredProducts",getFeaturedProduct)
 // Get a specific plant by ID
 router.get(
   "/plants/:id",

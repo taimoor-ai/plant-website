@@ -10,9 +10,13 @@ export const PlantProvider = ({ children }) => {
   const [userProfile,setUserProfile]=useState({});
   const [user,setUser]=useState({});
   const setUserGlobal=(user)=>{
+      console.log("user : ", user)
       setUser(user);
   }
-  const fetchUserProfile=async(userid)=>{
+  const getUser=()=>{
+    return user;
+  }
+  const fetchUserProfile=async (userid)=>{
     try {
       console.log("i am UserProfile fetch")
       setIsLoading(true);
@@ -20,10 +24,13 @@ export const PlantProvider = ({ children }) => {
       const response = await axios.get(`http://localhost:3000/staff/${userid}`);
       console.log(response.data)
       setUserProfile(response.data);
-      setIsLoading(false);
+            setIsLoading(false);
+      return response.data;
+
     } catch (error) {
       console.error("Error fetching accessories:", error);
       setIsLoading(false);
+      return {}
     }
   }
 
@@ -70,7 +77,7 @@ export const PlantProvider = ({ children }) => {
   
 
   return (
-    <PlantContext.Provider value={{ plants, isLoading2, deletePlant,user,fetchUserProfile,userProfile,setUserGlobal, fetchPlants,accessories,fetchAccessories ,addPlantLocally}}>
+    <PlantContext.Provider value={{ plants, isLoading2, deletePlant,getUser,user,fetchUserProfile,userProfile,setUserGlobal, fetchPlants,accessories,fetchAccessories ,addPlantLocally}}>
       {children}
     </PlantContext.Provider>
   );

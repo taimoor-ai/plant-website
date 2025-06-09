@@ -6,7 +6,8 @@ const {
   getCart,
   updateProductQuantity,
   removeProduct,
-  clearCart
+  clearCart,
+  
 } = require("../controllers/CartController");
 
 // Add to cart - Validate input
