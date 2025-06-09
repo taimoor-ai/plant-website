@@ -7,7 +7,10 @@ const createOrder = async (req, res) => {
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array(), success: false });
 
   try {
-    const order = new Orders(req.body);
+    console.log(req.body);
+    const { items, total, PaymentInfo ,shippingInfo} = req.body;
+    const order = new Orders({user:{address:shippingInfo.address},products: items, totalPrice:total, PaymentMethod: PaymentInfo.paymentMethod });
+ 
     await order.save();
     res.status(201).json({ message: "Order placed successfully", order, success: true });
   } catch (err) {

@@ -5,7 +5,6 @@ const ordersSchema = mongoose.Schema(
     user: {
       name: {
         type: String,
-        required: true
       },
       address: {
         type: String,
@@ -37,6 +36,10 @@ const ordersSchema = mongoose.Schema(
       type: String,
       enum: ["pending", "dispatch", "delivered", "completed","confirmed","cancelled"],
       default: "pending"
+    },
+    PaymentMethod: {
+      type: String,
+      required: true
     }
   },
   { timestamps: true }

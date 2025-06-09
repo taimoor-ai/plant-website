@@ -14,15 +14,15 @@ const router = express.Router();
 // Create a new order
 router.post(
   "/create",
-  [
-    body("user.userId").isMongoId().withMessage("Valid userId is required"),
-    body("user.userType").isIn(["User", "GuestUser"]).withMessage("userType must be User or GuestUser"),
-    body("products").isArray({ min: 1 }).withMessage("At least one product is required"),
-    body("products.*.productId").isMongoId().withMessage("Each productId must be valid"),
-    body("products.*.modelType").isIn(["accessories", "plants"]).withMessage("Invalid modelType"),
-    body("products.*.quantity").isInt({ min: 1 }).withMessage("Quantity must be at least 1"),
-    body("totalPrice").isNumeric().withMessage("Total price must be a number")
-  ],
+  // [
+  //   body("user.userId").isMongoId().withMessage("Valid userId is required"),
+  //   body("user.userType").isIn(["User", "GuestUser"]).withMessage("userType must be User or GuestUser"),
+  //   body("products").isArray({ min: 1 }).withMessage("At least one product is required"),
+  //   body("products.*.productId").isMongoId().withMessage("Each productId must be valid"),
+  //   body("products.*.modelType").isIn(["accessories", "plants"]).withMessage("Invalid modelType"),
+  //   body("products.*.quantity").isInt({ min: 1 }).withMessage("Quantity must be at least 1"),
+  //   body("totalPrice").isNumeric().withMessage("Total price must be a number")
+  // ],
   createOrder
 );
 
