@@ -6,9 +6,12 @@ import ConfirmDialog from "./ConfirmDialog";
 import { PlantContext } from "../../context/plantsContext";
 import { useContext } from "react";
 const PlantList = () => {
-  const { plants, isLoading2, deletePlant, fetchPlants } = useContext(PlantContext);
-  console.log(plants)
-  if (isLoading2) {return <p>Loading plants...</p>;}
+  const { plants, isLoading2, deletePlant, fetchPlants } =
+    useContext(PlantContext);
+  console.log(plants);
+  if (isLoading2) {
+    return <p>Loading plants...</p>;
+  }
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [filteredPlants, setFilteredPlants] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,10 +53,13 @@ const PlantList = () => {
       //   console.log(res)
       // } else {
 
-        const res=await axios.post("http://localhost:3000/product/plants/setAvailability", {
+      const res = await axios.post(
+        "http://localhost:3000/product/plants/setAvailability",
+        {
           ids: selectedPlants,
           isavailable: action === "available",
-        });
+        }
+      );
       //    console.log(res)
       // }
 
@@ -63,7 +69,6 @@ const PlantList = () => {
       console.error("Bulk action failed:", err);
     }
   };
-
 
   useEffect(() => {
     applyFilters();
@@ -148,7 +153,6 @@ const PlantList = () => {
 
   const categories = [...new Set(plants.map((plant) => plant.category))];
 
-  
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Filters Section */}
@@ -246,29 +250,28 @@ const PlantList = () => {
             {selectedPlants.length} selected
           </span>
           <button
-  onClick={() => performBulkAction("available")}
-  className="px-4 py-2 bg-green-100 text-green-800 rounded-full shadow-md hover:bg-green-200 transition-transform duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 font-semibold flex items-center gap-2"
-  style={{ boxShadow: '0 2px 6px rgba(21, 128, 61, 0.25)' }}
->
-  <span>🌿</span> Mark Available
-</button>
+            onClick={() => performBulkAction("available")}
+            className="px-4 py-2 bg-green-100 text-green-800 rounded-full shadow-md hover:bg-green-200 transition-transform duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 font-semibold flex items-center gap-2"
+            style={{ boxShadow: "0 2px 6px rgba(21, 128, 61, 0.25)" }}
+          >
+            <span>🌿</span> Mark Available
+          </button>
 
-<button
-  onClick={() => performBulkAction("unavailable")}
-  className="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full shadow-md hover:bg-yellow-200 transition-transform duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 font-semibold flex items-center gap-2"
-  style={{ boxShadow: '0 2px 6px rgba(202, 138, 4, 0.25)' }}
->
-  <span>🍃</span> Mark Unavailable
-</button>
+          <button
+            onClick={() => performBulkAction("unavailable")}
+            className="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full shadow-md hover:bg-yellow-200 transition-transform duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 font-semibold flex items-center gap-2"
+            style={{ boxShadow: "0 2px 6px rgba(202, 138, 4, 0.25)" }}
+          >
+            <span>🍃</span> Mark Unavailable
+          </button>
 
-<button
-  onClick={() => setConfirmOpen(true)}
-  className="px-4 py-2 bg-red-100 text-red-700 rounded-full shadow-md hover:bg-red-200 transition-transform duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 font-semibold flex items-center gap-2"
-  style={{ boxShadow: '0 2px 6px rgba(220, 38, 38, 0.25)' }}
->
-  <span>🍂</span> Delete Selected
-</button>
-
+          <button
+            onClick={() => setConfirmOpen(true)}
+            className="px-4 py-2 bg-red-100 text-red-700 rounded-full shadow-md hover:bg-red-200 transition-transform duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 font-semibold flex items-center gap-2"
+            style={{ boxShadow: "0 2px 6px rgba(220, 38, 38, 0.25)" }}
+          >
+            <span>🍂</span> Delete Selected
+          </button>
         </div>
       )}
 

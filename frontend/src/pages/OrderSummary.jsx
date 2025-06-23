@@ -124,7 +124,7 @@ export default function OrderSummary({
             disabled={!canProceed()}
             className="w-full py-4 bg-green-700 text-white font-bold rounded-xl hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg"
           >
-            {currentStep === 3 ? "Complete Order" : "Continue"}
+            {currentStep === 3 ? "Continue" : "Continue"}
           </button>
         </div>
   

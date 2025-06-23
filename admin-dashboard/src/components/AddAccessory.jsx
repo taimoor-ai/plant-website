@@ -4,10 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import PlantLoader from './PlantLoader';
 import Notification from './Notification';
 import { FiUpload, FiX, FiPlus } from 'react-icons/fi';
-import { useLocation } from 'react-router-dom';
+
 const AddAccessory = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState({ show: false, message: '', type: '' });
   const [formData, setFormData] = useState({
@@ -21,22 +20,6 @@ const AddAccessory = () => {
     category: '',
     isavailable: true,
   });
-  useEffect(() => {
-    if (location.state?.accessory) {
-      const { accessory } = location.state;
-      setFormData({
-        name: accessory.name || '',
-        commonName: accessory.commonName || [],
-        category: accessory.category || '',
-        size: accessory.size || '',
-        price: accessory.price || '',
-        stock: accessory.stock || '',
-        isavailable: accessory.isavailable ?? true,
-        imageUrl: accessory.imageUrl || [],
-        _id: accessory._id
-      });
-    }
-  }, [location.state]);
   const [errors, setErrors] = useState({});
   const [imageInputType, setImageInputType] = useState('url');
   const [selectedFiles, setSelectedFiles] = useState([]);

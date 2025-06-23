@@ -1,4 +1,3 @@
-"use client"
 
 import { useState, useEffect } from "react"
 import { ArrowRight, Leaf, ShoppingBag } from "lucide-react"

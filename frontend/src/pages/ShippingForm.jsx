@@ -164,7 +164,7 @@ export default function ShippingForm({ shippingInfo, setShippingInfo }) {
                 </div>
               </label>
 
-              <label className="flex items-center p-4 border-2  bg-green-50 border-gray-200 rounded-xl cursor-pointer hover:border-gray-300 transition-colors">
+              <label className="flex items-center p-4 border-2   bg-green-50 border-gray-200 rounded-xl cursor-pointer hover:border-gray-300 transition-colors">
                 <input
                   type="radio"
                   name="shippingMethod"
