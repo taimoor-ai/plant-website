@@ -20,7 +20,7 @@ app.use("/order",require("./routes/orders.js"));
 app.use("/review",require("./routes/reviews.js"));
 app.use("/staff",require("./routes/Staff.js"));
 app.use("/contactUs",require("./routes/ContactRoutes.js"));
-app.listen(5000,()=>{
+app.listen(3000,()=>{
    
     console.log('Server is running on port 5000');
 });
