@@ -64,7 +64,7 @@ const Navbar = ({ showSignInModal }) => {
       {/* Logo */}
       <Link
         to="/"
-        className="text-3xl font-black font-[rubik sans-sarif] tracking-wide text-emerald-700"
+        className="text-3xl font-black font-nunito tracking-wide text-emerald-700"
       >
         PLANTIFY
       </Link>
