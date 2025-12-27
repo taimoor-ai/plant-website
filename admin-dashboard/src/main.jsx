@@ -6,7 +6,10 @@ import { PlantProvider } from '../context/plantsContext.jsx';
 createRoot(document.getElementById('root')).render(
   <PlantProvider>
   <StrictMode>
-    <App />
+     <div className="font-nunito">
+      <App />
+    </div>
+
   </StrictMode>,
   </PlantProvider>
 )

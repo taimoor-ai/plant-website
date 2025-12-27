@@ -8,12 +8,17 @@ const createOrder = async (req, res) => {
 
   try {
     console.log(req.body);
-    const { items, total, PaymentInfo ,shippingInfo} = req.body;
-    const order = new Orders({user:{address:shippingInfo.address},products: items, totalPrice:total, PaymentMethod: PaymentInfo.paymentMethod });
+    const { items, total, paymentInfo ,shippingInfo} = req.body; 
+    const updatedItems = items.map(item => ({
+  ...item,
+  modelType: "plants"
+}));
+    const order = new Orders({user:{address:shippingInfo.address},products: updatedItems, totalPrice:total, PaymentMethod: paymentInfo.paymentMethod });
  
     await order.save();
     res.status(201).json({ message: "Order placed successfully", order, success: true });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message, success: false });
   }
 };
