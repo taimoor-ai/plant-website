@@ -1,10 +1,16 @@
-
-
 import { useEffect, useState } from "react"
-import { ShoppingCart,PackageCheck, Heart, Eye, Mail } from "lucide-react"
+import {
+  ShoppingCart,
+  PackageCheck,
+  Heart,
+  Eye,
+  Mail,
+} from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import QuickViewModal from "../pages/Quick-viewModel"
 import { useCart } from "../context/Cartcontext"
+import Lottie from "lottie-react"
+import loader from "../assets/Animations/loading.json"
 
 const FeaturedProducts = () => {
   const [featuredProducts, setFeaturedProducts] = useState([])
@@ -13,13 +19,16 @@ const FeaturedProducts = () => {
   const [error, setError] = useState(null)
   const [email, setEmail] = useState("")
   const [selectedProduct, setSelectedProduct] = useState(null)
+
   const navigate = useNavigate()
   const { addToCart } = useCart()
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:3000/product/featuredProducts")
+        const res = await fetch(
+          "http://localhost:3000/product/featuredProducts"
+        )
         if (!res.ok) throw new Error("Failed to fetch products")
         const data = await res.json()
         setFeaturedProducts(data.products)
@@ -41,25 +50,34 @@ const FeaturedProducts = () => {
 
   const handleSubscribe = (e) => {
     e.preventDefault()
-    // Add your subscription logic here
     console.log("Subscribing email:", email)
-    // Reset the email field
     setEmail("")
-    // You could show a success message here
   }
 
   return (
     <>
       <section className="container mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold text-center mb-6">Featured Products</h2>
+        <h2 className="text-3xl font-bold text-center mb-6">
+          Featured Products
+        </h2>
         <div className="w-20 h-0.5 bg-green-600 mx-auto mb-10"></div>
 
+        {/* 🔄 LOADER */}
         {loading ? (
-          <p className="text-center text-gray-500">Loading...</p>
+          <div className="flex justify-center items-center h-64">
+            <Lottie
+              animationData={loader}
+              loop
+              autoplay
+              className="w-32 h-32"
+            />
+          </div>
         ) : error ? (
           <p className="text-center text-red-500">{error}</p>
         ) : featuredProducts.length === 0 ? (
-          <p className="text-center text-gray-600">No featured products available.</p>
+          <p className="text-center text-gray-600">
+            No featured products available.
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {featuredProducts.map((product) => (
@@ -89,8 +107,17 @@ const FeaturedProducts = () => {
                 )}
 
                 {/* Image */}
-                <div className="relative h-64 bg-gray flex items-center justify-center p-6 cursor-pointer">
-                  <div className="cursor-pointer" onClick={() => navigate(`/productDetails/${product._id}/${product.light?"plant":"accessory"}`)}>
+                <div className="relative h-64 flex items-center justify-center p-6">
+                  <div
+                    className="cursor-pointer"
+                    onClick={() =>
+                      navigate(
+                        `/productDetails/${product._id}/${
+                          product.light ? "plant" : "accessory"
+                        }`
+                      )
+                    }
+                  >
                     <img
                       src={product.imageUrl?.[0] || "/placeholder.svg"}
                       alt={product.name}
@@ -101,8 +128,15 @@ const FeaturedProducts = () => {
                   {/* Action Buttons */}
                   <div className="absolute inset-x-0 bottom-4 flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     {[
-                      { icon: ShoppingCart, label: "Add to Cart", action: () => addToCart(product, 1) },
-                      { icon:PackageCheck , label: "CheckOut" },
+                      {
+                        icon: ShoppingCart,
+                        label: "Add to Cart",
+                        action: () => addToCart(product, 1),
+                      },
+                      {
+                        icon: PackageCheck,
+                        label: "CheckOut",
+                      },
                       { icon: Heart, label: "Add to Wishlist" },
                       {
                         icon: Eye,
@@ -119,7 +153,6 @@ const FeaturedProducts = () => {
                         </button>
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition">
                           {label}
-                          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-gray-800"></div>
                         </div>
                       </div>
                     ))}
@@ -132,7 +165,9 @@ const FeaturedProducts = () => {
                     {product.name}
                   </h3>
                   <div>
-                    <span className="text-[rgb(121,163,7)] font-bold text-lg">pkr{product.price.toFixed(2)}</span>
+                    <span className="text-[rgb(121,163,7)] font-bold text-lg">
+                      pkr{product.price.toFixed(2)}
+                    </span>
                     {product.originalPrice && (
                       <span className="text-gray-400 line-through ml-2 text-sm">
                         pkr{product.originalPrice.toFixed(2)}
@@ -155,17 +190,21 @@ const FeaturedProducts = () => {
         )}
       </section>
 
-      {/* Newsletter Subscription Section */}
+      {/* Newsletter */}
       <section className="py-16 border-t border-gray-200">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center mb-10">
-            <h2 className="text-4xl font-lora mb-6">
-              Get <span className="text-[rgb(121,163,7)]">20% Off</span> Your Next Order
+            <h2 className="text-4xl mb-6">
+              Get <span className="text-[rgb(121,163,7)]">20% Off</span> Your Next
+              Order
             </h2>
             <div className="w-24 h-0.5 bg-gray-300 mx-auto"></div>
           </div>
 
-          <form onSubmit={handleSubscribe} className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto">
+          <form
+            onSubmit={handleSubscribe}
+            className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto"
+          >
             <div className="flex-1 relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                 <Mail className="h-5 w-5 text-gray-400" />
@@ -181,7 +220,7 @@ const FeaturedProducts = () => {
             </div>
             <button
               type="submit"
-              className="md:w-auto px-8 py-3 bg-gray-800 hover:bg-gray-900 text-white font-medium transition-colors"
+              className="px-8 py-3 bg-gray-800 hover:bg-gray-900 text-white font-medium transition-colors"
             >
               SUBSCRIBE
             </button>

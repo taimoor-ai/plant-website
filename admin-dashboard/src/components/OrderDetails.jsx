@@ -12,6 +12,7 @@ const OrderDetails = () => {
     const fetchOrder = async () => {
       try {
         const res = await axios.get(`http://localhost:3000/order/${id}`);
+        console.log("order is : ",res.data);
         const orderData = res.data;
         setOrder(orderData);
 
@@ -20,11 +21,10 @@ const OrderDetails = () => {
           orderData.products.map(async (product) => {
             const endpoint =
               product.modelType === "plants"
-                ? `http://localhost:3000/product/plants/${product.productId}`
-                : `http://localhost:3000/accessory/get/${product.productId}`;
+                ? `http://localhost:3000/product/plants/${product._id}`
+                : `http://localhost:3000/accessory/get/${product._id}`;
             try {
               const res = await axios.get(endpoint);
-              console.log(res.data)
               return {
                 ...product,
                 name: res.data.name,

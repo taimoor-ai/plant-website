@@ -1,28 +1,30 @@
-"use client"
 import { useState } from "react"
-import { Check, MapPin, CreditCard, Truck, User, Heart, Star } from "lucide-react"
+import { MapPin, CreditCard, Truck } from "lucide-react"
 import { Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
-
+import Lottie from "lottie-react"
+import success from "../assets/Animations/success.json"
+import { useCart } from "../context/Cartcontext"
 export default function OrderConfirmation({
-  cartItems,
-  subtotal,
-  shipping,
-  tax,
-  discount,
-  total,
-  shippingInfo,
-  paymentInfo,
+  cartItems = [],
+  subtotal = 0,
+  shipping = 0,
+  tax = 0,
+  discount = 0,
+  total = 0,
+  shippingInfo = {},
+  paymentInfo = {},
 }) {
-  const [orderPlaced, setOrderPlaced] = useState(false)
   const [orderNumber, setOrderNumber] = useState("")
-  const [showCelebration, setShowCelebration] = useState(false)
   const [showOrderInfo, setShowOrderInfo] = useState(false)
+  const [showDetails, setShowDetails] = useState(false)
   const [orderError, setOrderError] = useState(null)
   const [loading, setLoading] = useState(false)
-
+  const { clearCart } = useCart();
   const handleConfirmOrder = async () => {
-    const generatedOrderNumber = "PLNT-" + Math.floor(100000 + Math.random() * 900000)
+    const generatedOrderNumber =
+      "PLNT-" + Math.floor(100000 + Math.random() * 900000)
+
     setOrderNumber(generatedOrderNumber)
     setLoading(true)
     setOrderError(null)
@@ -30,9 +32,7 @@ export default function OrderConfirmation({
     try {
       const response = await fetch("http://localhost:3000/order/create", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           orderNumber: generatedOrderNumber,
           items: cartItems,
@@ -49,65 +49,171 @@ export default function OrderConfirmation({
       if (!response.ok) throw new Error("Failed to place order")
 
       const data = await response.json()
+
       if (data.success) {
-        setOrderPlaced(true)
-        setShowCelebration(true)
-        setShowOrderInfo(true)
-        setTimeout(() => setShowCelebration(false), 3000)
+        setShowOrderInfo(true) // show animation screen
+        clearCart(); // clear cart after order is placed
       } else {
-        throw new Error("Order was not confirmed by server")
+        throw new Error("Order not confirmed")
       }
     } catch (error) {
-      console.error("Error placing order:", error.message)
-      setOrderError("❌ Failed to place your order. Please try again later.")
+      setOrderError("❌ Failed to place your order. Please try again.")
     } finally {
       setLoading(false)
     }
   }
 
-  const confettiColors = [
-    "bg-pink-400", "bg-yellow-400", "bg-green-400", "bg-blue-400",
-    "bg-purple-400", "bg-red-400", "bg-orange-400", "bg-indigo-400"
-  ]
-
   return (
     <div className="min-h-screen bg-green-50 flex items-center justify-center p-4">
       <motion.div
-        className="max-w-2xl w-full mt-30 bg-white rounded-3xl shadow-xl p-10 relative overflow-hidden"
+        className="max-w-2xl mt-32 w-full bg-white rounded-3xl shadow-xl p-8 relative"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.4 }}
       >
-        <AnimatePresence>
-          {showCelebration && (
-            <motion.div
-              className="absolute inset-0 pointer-events-none z-50"
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-            >
-              {/* Confetti and animations here (same as your original) */}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
+          {/* ✅ SUCCESS FLOW */}
           {showOrderInfo ? (
-            // ✅ Order success info (same as your original)
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              {/* Order confirmed info UI */}
+            <motion.div
+              key="success"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center"
+            >
+              {/* 🎉 LOTTIE ANIMATION */}
+              {!showDetails && (
+                <div className="flex justify-center">
+                  <Lottie
+                    animationData={success}
+                    loop={false}
+                    autoplay
+                    className="w-44 h-44"
+                    onComplete={() => setShowDetails(true)}
+                  />
+                </div>
+              )}
+
+              {/* 📦 ORDER DETAILS (fade in after animation) */}
+              <AnimatePresence>
+                {showDetails && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                  >
+                    <h2 className="text-2xl font-bold text-gray-800 mt-4 mb-2">
+                      Order Confirmed!
+                    </h2>
+                    <p className="text-gray-600 mb-6">
+                      Thank you for your purchase 🌱
+                    </p>
+
+                    <div className="bg-green-50 rounded-xl p-4 mb-6">
+                      <p className="text-sm text-gray-600">Order Number</p>
+                      <p className="text-lg font-semibold text-green-700">
+                        {orderNumber}
+                      </p>
+                    </div>
+
+                    {/* 📦 Items */}
+                    <div className="bg-gray-50 rounded-xl p-4 mb-4 text-left">
+                      <h3 className="font-semibold mb-2 flex items-center gap-2">
+                        <Truck className="w-5 h-5 text-green-600" />
+                        Items
+                      </h3>
+                      {cartItems.map((item) => (
+                        <div
+                          key={item._id}
+                          className="flex justify-between text-sm mb-1"
+                        >
+                          <span>
+                            {item.name} × {item.quantity}
+                          </span>
+                          <span>${item.price * item.quantity}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* 📍 Shipping */}
+                    <div className="bg-gray-50 rounded-xl p-4 mb-4 text-left">
+                      <h3 className="font-semibold flex items-center gap-2 mb-2">
+                        <MapPin className="w-5 h-5 text-green-600" />
+                        Shipping Address
+                      </h3>
+                      <p className="text-sm text-gray-700">
+                        {shippingInfo?.name}
+                        <br />
+                        {shippingInfo?.address}
+                        <br />
+                        {shippingInfo?.city}, {shippingInfo?.country}
+                      </p>
+                    </div>
+
+                    {/* 💳 Payment */}
+                    <div className="bg-gray-50 rounded-xl p-4 mb-4 text-left">
+                      <h3 className="font-semibold flex items-center gap-2 mb-2">
+                        <CreditCard className="w-5 h-5 text-green-600" />
+                        Payment Method
+                      </h3>
+                      <p className="text-sm text-gray-700">
+                        {paymentInfo?.paymentMethod} ••••{" "}
+                        {paymentInfo?.last4}
+                      </p>
+                    </div>
+
+                    {/* 💰 Summary */}
+                    <div className="border rounded-xl p-4 mb-6">
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Subtotal</span>
+                        <span>${subtotal}</span>
+                      </div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Shipping</span>
+                        <span>${shipping}</span>
+                      </div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Tax</span>
+                        <span>${tax}</span>
+                      </div>
+                      {discount > 0 && (
+                        <div className="flex justify-between text-sm text-green-600">
+                          <span>Discount</span>
+                          <span>- ${discount}</span>
+                        </div>
+                      )}
+                      <hr className="my-2" />
+                      <div className="flex justify-between font-semibold text-lg">
+                        <span>Total</span>
+                        <span>${total}</span>
+                      </div>
+                    </div>
+
+                    <Link
+                      to="/"
+                      className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl"
+                    >
+                      Continue Shopping 🌿
+                    </Link>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           ) : orderError ? (
-            <div className="text-center text-red-600 text-lg">{orderError}</div>
+            <div className="text-center text-red-600 font-semibold">
+              {orderError}
+            </div>
           ) : (
             <div className="text-center">
-              <h2 className="text-xl font-semibold mb-4 text-gray-800">Ready to place your order?</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                Ready to place your order?
+              </h2>
               <button
-                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl transition"
                 onClick={handleConfirmOrder}
                 disabled={loading}
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl transition disabled:opacity-50"
               >
-                {loading ? "Placing..." : "Confirm Order"}
+                {loading ? "Placing Order..." : "Confirm Order"}
               </button>
             </div>
           )}
