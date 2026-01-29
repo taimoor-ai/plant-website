@@ -34,7 +34,7 @@ function App() {
       const newGuestId = crypto.randomUUID();
 
       // Send the guest ID to the backend
-      fetch('http://localhost:3000/user/registerGuest', {
+      fetch(`${import.meta.env.VITE_API_URL}/user/registerGuest`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ function App() {
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/checkout" element={<CheckoutPage/>}/>
       </Routes>
-      <Footer />
+     
       <Cart/>
       <SignIn isOpen={showSignIn} onClose={() => setShowSignIn(false)} onSwitchToSignUp={handleSwitchToSignUp} />
       <SignUpModal isOpen={showSignUp} onClose={() => setShowSignUp(false)} onSwitchToSignIn={handleSwitchToSignIn} />

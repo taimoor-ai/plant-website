@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Grid, List, ChevronDown, Plus } from "lucide-react"
-
+import Footer from "../components/Footer"
 export default function Shop() {
   const [viewMode, setViewMode] = useState("grid")
   const [sortBy, setSortBy] = useState("alphabetically")
@@ -139,6 +139,7 @@ export default function Shop() {
   const tags = ["blue", "gold", "gray", "green", "l", "m", "red", "s"]
 
   return (
+    <>
     <div className="min-h-screen bg-gray-50">
       {/* Header with botanical background */}
       <div
@@ -403,5 +404,8 @@ export default function Shop() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
+
   )
 }

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { MapPin, Phone, Mail, Clock, Send, Facebook, Instagram, Twitter, Linkedin, CheckCircle } from "lucide-react"
-
+import Footer from "./Footer"
 const ContactUs = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -67,7 +67,7 @@ const ContactUs = () => {
       setIsSubmitting(true);
   
       try {
-        const response = await fetch("http://localhost:3000/contactUs/contact", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/contactUs/contact`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -111,6 +111,7 @@ const ContactUs = () => {
   
 
   return (
+    <>
     <div className="bg-white my-20">
       {/* Plant-themed decorative elements */}
       <div className="absolute left-0 top-0 w-32 h-32 md:w-64 md:h-64 bg-green-100 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-30"></div>
@@ -388,6 +389,8 @@ const ContactUs = () => {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   )
 }
 

@@ -105,7 +105,7 @@ export default function OrderSummary({
           </div>
           <div className="flex justify-between text-xl font-bold text-gray-900 border-t border-gray-200 pt-3">
             <span>Total</span>
-            <span className="text-green-700">{total.toFixed(2)} pkr</span>
+            <span className="text-green-700">pkr</span>
           </div>
         </div>
   

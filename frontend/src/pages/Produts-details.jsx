@@ -16,7 +16,7 @@ import {
 } from "lucide-react"
 import { useParams } from "react-router-dom"
 import { useCart } from "../context/Cartcontext"
-
+import Footer from "../components/Footer";
 // Reusable Button component (supports size, variant, disabled, className)
 function Button({ children, size = "md", variant = "default", disabled, className = "", ...props }) {
   const baseClasses = "inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
@@ -91,9 +91,9 @@ export default function ProductDetails() {
         console.log(id)
         let res;
         if(type==="plant"){
-             res = await fetch(`http://localhost:3000/product/plants/${id}`)
+             res = await fetch(`${import.meta.env.VITE_API_URL}/product/plants/${id}`)
         }else{
-            res = await fetch(`http://localhost:3000/accessory/get/${id}`)
+            res = await fetch(`${import.meta.env.VITE_API_URL}/accessory/get/${id}`)
         }
         if (!res.ok) throw new Error("Failed to fetch product details.")
         const data = await res.json()
@@ -145,6 +145,7 @@ export default function ProductDetails() {
   }
 
   return (
+    <>
     <div className="max-w-7xl mx-auto my-30 px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Left Column - Images */}
@@ -457,6 +458,9 @@ export default function ProductDetails() {
           )}
         </div>
       </div>
+      
     </div>
+     <Footer />
+    </>
   )
 }

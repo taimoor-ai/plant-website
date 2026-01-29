@@ -5,7 +5,7 @@ import FeaturedProducts from "../components/FeaturedProducts"
 import History from "./History"
 import Carouser from "./Carouser"
 import Cart from "../components/Cart"
-
+import Footer from "../components/Footer"
 export default function Home() {
  
 
@@ -14,7 +14,7 @@ export default function Home() {
       <Carouser/>
       <History />
       <FeaturedProducts/>
-      {/* <Cart/> */}
+      <Footer />
     </>
   )
 }

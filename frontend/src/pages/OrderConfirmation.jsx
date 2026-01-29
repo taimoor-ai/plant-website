@@ -30,7 +30,7 @@ export default function OrderConfirmation({
     setOrderError(null)
 
     try {
-      const response = await fetch("http://localhost:3000/order/create", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/order/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -166,11 +166,11 @@ export default function OrderConfirmation({
                     <div className="border rounded-xl p-4 mb-6">
                       <div className="flex justify-between text-sm mb-1">
                         <span>Subtotal</span>
-                        <span>${subtotal}</span>
+                        <span>${shipping}</span>
                       </div>
                       <div className="flex justify-between text-sm mb-1">
                         <span>Shipping</span>
-                        <span>${shipping}</span>
+                        <span>${subtotal}</span>
                       </div>
                       <div className="flex justify-between text-sm mb-1">
                         <span>Tax</span>
@@ -179,13 +179,13 @@ export default function OrderConfirmation({
                       {discount > 0 && (
                         <div className="flex justify-between text-sm text-green-600">
                           <span>Discount</span>
-                          <span>- ${discount}</span>
+                          <span>0$</span>
                         </div>
                       )}
                       <hr className="my-2" />
                       <div className="flex justify-between font-semibold text-lg">
                         <span>Total</span>
-                        <span>${total}</span>
+                        <span>${shipping}</span>
                       </div>
                     </div>
 

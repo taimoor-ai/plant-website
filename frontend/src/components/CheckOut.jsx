@@ -15,6 +15,7 @@ import {
   Star,
  
 } from "lucide-react"
+import Footer from "./Footer"
 import { Link } from "react-router-dom"
 import { useCart } from "../context/Cartcontext"
 import OrderConfirmation from "../pages/OrderConfirmation"
@@ -84,6 +85,7 @@ export default function CheckoutPage() {
   }
 
   return (
+    <>
     <div className="min-h-screen mt-32 bg-gray-50">
       {/* Professional Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
@@ -167,7 +169,7 @@ export default function CheckoutPage() {
               subtotal={subtotal}
               shipping={shipping}
               tax={tax}
-              discount={discount}
+              discount={0}
               total={total}
               currentStep={currentStep}
               setCurrentStep={setCurrentStep}
@@ -179,6 +181,8 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   )
 }
 
